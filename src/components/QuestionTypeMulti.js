@@ -25,6 +25,7 @@ class QuestionTypeMulti extends Component {
                 alertVisible: false,
                 alertText:"",
                 alertColor: "",
+                maxAllowed: 3,
                 questionObject: props.q,
                 options: props.q.options
             };
@@ -59,7 +60,7 @@ class QuestionTypeMulti extends Component {
             this.setState({
                 userAnswers: newAnswers
             })
-        } else if(userAnswers.length === (this.maxAllowed)) {
+        } else if(userAnswers.length === (this.state.maxAllowed)) {
             this.setState({
                 alertVisible: true,
                 alertText:"Too many answers selected, please select only "+this.state.maxAllowed,
@@ -109,7 +110,7 @@ class QuestionTypeMulti extends Component {
 
         if(correct === 0){
             this.props.acceptAnswer(resultType, failText);
-        } else if(correct === this.maxAllowed) {
+        } else if(correct === this.state.maxAllowed) {
             resultType = 3;
             this.props.acceptAnswer(resultType, successText);
         } else {
