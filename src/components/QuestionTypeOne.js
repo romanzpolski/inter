@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import { Alert, Col, Row, Card, CardHeader, CardText, CardBody, CardTitle, CardFooter, Button } from 'reactstrap';
 
+const alertDefault = {
+    visible: false,
+    color: "secondary",
+    text: ""
+}
 
 class QuestionTypeOne extends Component {
 
@@ -8,9 +13,7 @@ class QuestionTypeOne extends Component {
         super(props);
         this.state = {
             userAnswer: "",
-            alertVisible: false,
-            alertText:"",
-            alertColor: "",
+            alert: alertDefault,
             questionObject: this.props.q,
             options: this.props.q.options
         };
@@ -20,9 +23,7 @@ class QuestionTypeOne extends Component {
         if (props.q !== state.questionObject) {
             return {
                 userAnswer: "",
-                alertVisible: false,
-                alertText:"",
-                alertColor: "",
+                alert: alertDefault,
                 questionObject: props.q,
                 options: props.q.options
             };
@@ -52,7 +53,7 @@ class QuestionTypeOne extends Component {
         console.log("selected", answer);
         this.setState({
             userAnswer:answer,
-            alertVisible: false
+            alert: alertDefault
         })
     }
 
@@ -67,9 +68,11 @@ class QuestionTypeOne extends Component {
 
         if(!this.state.userAnswer){
             this.setState({
-                alertVisible: true,
-                alertText:"Please select one option.",
-                alertColor: "danger"
+                alert: {
+                    visible: true,
+                    color: "danger",
+                    text: "Please select one option."
+                }
             });
             return;
         } else if (correctAnswers.includes(this.state.userAnswer)){
@@ -80,11 +83,16 @@ class QuestionTypeOne extends Component {
             str = failText + " " + this.state.userAnswer;
         }
 
-        this.props.acceptAnswer(resultType, str);
+        let answerObj = {
+            type: resultType,
+            str: str
+        }
+
+        this.props.acceptAnswer(answerObj);
     }
 
     onDismissAlert = () => {
-        this.setState({ alertVisible: false });
+        this.setState({ alert: alertDefault });
     }
 
     render() {
@@ -114,10 +122,10 @@ class QuestionTypeOne extends Component {
                         </Row>
                     )}
                     <br/>
-                    <Alert color={this.state.alertColor}
-                           isOpen={this.state.alertVisible}
+                    <Alert color={this.state.alert.color}
+                           isOpen={this.state.alert.visible}
                            toggle={this.onDismissAlert}>
-                        {this.state.alertText}
+                        {this.state.alert.text}
                     </Alert>
                 </CardBody>
                 <CardFooter className={"text-right"}>

@@ -13,86 +13,125 @@ const types = {
     3:QuestionTypeOne
 }
 
-const modalColors = {
+const cardColors = {
     0:"secondary",
     1:"danger",
     2:"warning",
     3:"success"
 }
 
+const modalDefault = {
+    open: false,
+    text: "",
+    type: 0
+}
+
+const modalFadeProps = {
+    timeout: {
+        enter: 0,
+        exit: 150
+    }
+}
+
 class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            progress: false,
             index: 0,
-            modal: false,
-            modalText: "",
-            modalType: 0
+            modal: modalDefault,
+            results:[]
         };
 
         this.questions = questions;
     }
 
-    acceptAnswer = (resultType, str) => {
-        let len = this.questions.length - 1;
-        let newIndex = this.state.index === len ? 0 : this.state.index + 1;
+    acceptAnswer = (aObj) => {
+        let totalQuestions = this.questions.length - 1,
+            index = this.state.index,
+            newResults = this.state.results;
+
+        newResults.push(aObj);
+
+        if((index) === totalQuestions){
+            this.handleResults(newResults);
+        } else {
+            this.setState({
+                index: index + 1,
+                results:newResults
+            });
+        }
+    }
+
+    handleResults = (res) => {
+        let markUp = res.map((r, i) => this.addMarkup(r, i));
         this.setState({
-            modalText: str,
-            index: newIndex,
-            modal: true,
-            modalType: resultType
+            modal: {
+                text: markUp,
+                open: true
+            },
         });
-        console.log("new index", newIndex);
+    }
+
+    addMarkup = (res, i) => {
+        let question = questions[i];
+        return(
+            [
+                <Card key={"card"} body outline
+                      color={cardColors[res.type]}
+                      className={"text-center"}>
+                    <CardText>Question {i+1}</CardText>
+                    <CardTitle><h4>{question.question}</h4></CardTitle>
+                    <CardText><b>{res.str}</b></CardText>
+                </Card>,
+                <br key={"break"}/>
+            ]
+        )
     }
 
     toggleModal = () => {
-        this.setState(prevState => ({
-            modal: !prevState.modal
-        }));
+        this.setState({
+            modal: modalDefault,
+            index: 0,
+            results: []
+        });
     }
 
     render(){
-
         let questionObject = this.questions[this.state.index];
         let ComponentName = types[questionObject.type];
-        let modalColor = modalColors[this.state.modalType];
-
-        let fadeProps = {
-            timeout: {
-                enter: 0,
-                exit: 150
-            }
-        }
+        let modal= this.state.modal;
 
         return (
-            <Container>
-                <br/>
-                <br/>
-                <Row>
-                    <Col sm={"1"}></Col>
-                    <Col sm={"10"}>
-                        <ComponentName
-                            q={questionObject}
-                            acceptAnswer={this.acceptAnswer}>
-                        </ComponentName>
-                    </Col>
-                </Row>
-                <Modal backdropTransition={fadeProps} size={"lg"} isOpen={this.state.modal} toggle={this.toggleModal}>
+            [
+                <Container key={"container"}>
+                    <br/>
+                    <br/>
+                    <Row>
+                        <Col sm={"1"}></Col>
+                        <Col sm={"10"}>
+                            <ComponentName
+                                q={questionObject}
+                                acceptAnswer={this.acceptAnswer}>
+                            </ComponentName>
+                        </Col>
+                    </Row>
+                </Container>,
+
+                <Modal key={"modal"}
+                       backdropTransition={modalFadeProps}
+                       size={"lg"}
+                       isOpen={modal.open}
+                       toggle={this.toggleModal}>
                     <ModalHeader toggle={this.toggle}>Result</ModalHeader>
                     <ModalBody>
-                        <Card body outline color={modalColor} className={"text-center"}>
-                            <br/>
-                            <br/>
-                            <CardTitle>{this.state.modalText}</CardTitle>
-                            <br/>
-                            <br/>
-                        </Card>
+                        {modal.text}
                     </ModalBody>
                     <ModalFooter>
-                        <Button outline color="primary" onClick={this.toggleModal}>Next Question</Button>
+                        <Button outline color="primary" onClick={this.toggleModal}>Start Again</Button>
                     </ModalFooter>
                 </Modal>
-            </Container>
+            ]
         )
     }
 }

@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import { Alert, Col, Row, Card, CardHeader, CardText, CardBody, CardTitle, CardFooter, Button } from 'reactstrap';
 
+const alertDefault = {
+    visible: false,
+    color: "secondary",
+    text: ""
+}
 
 class QuestionTypeMulti extends Component {
 
@@ -8,9 +13,7 @@ class QuestionTypeMulti extends Component {
         super(props);
         this.state = {
             userAnswers: [],
-            alertVisible: false,
-            alertText:"",
-            alertColor: "",
+            alert: alertDefault,
             maxAllowed: 3,
             userWants: false,
             questionObject: this.props.q,
@@ -22,9 +25,7 @@ class QuestionTypeMulti extends Component {
         if (props.q !== state.questionObject) {
             return {
                 userAnswers: [],
-                alertVisible: false,
-                alertText:"",
-                alertColor: "",
+                alert: alertDefault,
                 maxAllowed: 3,
                 questionObject: props.q,
                 options: props.q.options
@@ -61,10 +62,13 @@ class QuestionTypeMulti extends Component {
                 userAnswers: newAnswers
             })
         } else if(userAnswers.length === (this.state.maxAllowed)) {
+            let alert = {
+                visible: true,
+                color: "danger",
+                text: "Too many answers selected, please select only "+this.state.maxAllowed
+            }
             this.setState({
-                alertVisible: true,
-                alertText:"Too many answers selected, please select only "+this.state.maxAllowed,
-                alertColor: "danger"
+                alert: alert
             });
         } else {
             newAnswers = userAnswers;
@@ -75,7 +79,7 @@ class QuestionTypeMulti extends Component {
             })
         }
 
-        if(this.state.alertVisible){
+        if(this.state.alert.visible){
             this.onDismissAlert();
         }
         console.log("answers : ", this.state.userAnswers);
@@ -88,14 +92,18 @@ class QuestionTypeMulti extends Component {
             failText = qObj.fail,
             successText = qObj.success,
             partlyText = qObj.partly,
-            resultType = 1,
-            total = this.state.userAnswers.length;
+            total = this.state.userAnswers.length,
+            str = "", // result string
+            type = 0; // result type : 1, 2, 3
 
         if(total < this.state.maxAllowed && !this.state.userWants){
+            let alert = {
+                visible: true,
+                color: "info",
+                text: "You can select "+ this.state.maxAllowed + " options, click OK to continue, or select more.",
+            }
             this.setState({
-                alertVisible: true,
-                alertText:"You can select "+ this.state.maxAllowed + " options, click OK to continue, or select more.",
-                alertColor: "info",
+                alert: alert,
                 userWants: true
             });
             return;
@@ -109,19 +117,25 @@ class QuestionTypeMulti extends Component {
         })
 
         if(correct === 0){
-            this.props.acceptAnswer(resultType, failText);
+            type = 1;
+            str = failText;
         } else if(correct === this.state.maxAllowed) {
-            resultType = 3;
-            this.props.acceptAnswer(resultType, successText);
+            type = 3;
+            str = successText
         } else {
             let result = Math.round(correct / this.state.maxAllowed * 100);
-            resultType = 2;
-            this.props.acceptAnswer(resultType, partlyText+ " Your score is: " + result +"%");
+            type = 2;
+            str = partlyText+ " Your score is: " + result +"%";
         }
+
+        this.props.acceptAnswer({
+            type: type,
+            str: str
+        });
     }
 
     onDismissAlert = () => {
-        this.setState({ alertVisible: false });
+        this.setState({ alert:alertDefault });
     }
 
     render() {
@@ -150,10 +164,10 @@ class QuestionTypeMulti extends Component {
                         </Row>
                     )}
                     <br/>
-                    <Alert color={this.state.alertColor}
-                           isOpen={this.state.alertVisible}
+                    <Alert color={this.state.alert.color}
+                           isOpen={this.state.alert.visible}
                            toggle={this.onDismissAlert}>
-                        {this.state.alertText}
+                        {this.state.alert.text}
                     </Alert>
                 </CardBody>
                 <CardFooter className={"text-right"}>
