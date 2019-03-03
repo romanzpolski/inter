@@ -1,14 +1,18 @@
-To host on gh-pages:
-delete gh-pages branch
+###To host on gh-pages
+delete ```gh-pages``` branch
+```bash
 npm run-script build
 git subtree push --prefix build origin gh-pages
-change /static/ in paths in index.html in gh-pages branch.
+```
+change ```/static/``` to ```static/``` 
+in ```index.html``` in ```gh-pages``` branch.<br> 
+Its best to do it directly on github website
 
-Warning !!
-Do not checkout to gh-pages with your ide or else :P
+####Warning !!
+Do not checkout to gh-pages branch with your ide or else :P
 
-
-
+---
+***
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

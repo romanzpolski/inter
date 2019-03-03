@@ -94,7 +94,7 @@ class QuestionTypeMulti extends Component {
         if(total < this.state.maxAllowed && !this.state.userWants){
             this.setState({
                 alertVisible: true,
-                alertText:"You can select "+ this.maxAllowed + " options, click OK to continue, or select more.",
+                alertText:"You can select "+ this.state.maxAllowed + " options, click OK to continue, or select more.",
                 alertColor: "info",
                 userWants: true
             });
