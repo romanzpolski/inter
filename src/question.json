@@ -1,0 +1,26 @@
+{
+  "questions":[
+    {
+      "id": 2,
+      "question": "Identify the components of a PC",
+      "instructions": "Select your answer by clicking three options. Then click OK.",
+      "options": [
+        "Processor",
+        "Memory",
+        "Hard Disk",
+        "CD-ROM Drive",
+        "Printer"
+      ],
+      "answers": [
+        "Processor",
+        "Memory",
+        "Hard Disk",
+        "CD-ROM Drive"
+      ],
+      "type": 2,
+      "success": "That's right",
+      "partly": "Your partly right",
+      "fail":"That's not it"
+    }
+  ]
+}

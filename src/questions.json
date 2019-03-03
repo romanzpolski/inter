@@ -14,7 +14,7 @@
       "type": 1,
       "success": "That's right",
       "partly": "Your partly right",
-      "fail":"That's not it"
+      "fail":"That's not"
     },
     {
       "id": 2,
@@ -53,7 +53,7 @@
       "type": 1,
       "success": "That's right",
       "partly": "Your partly right",
-      "fail":"That's not it"
+      "fail":"That's not"
     }
   ]
 }

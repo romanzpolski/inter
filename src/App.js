@@ -1,27 +1,48 @@
 import React, { Component } from 'react';
-import Question from './components/Question';
+import QuestionTypeOne from './components/QuestionTypeOne';
+import QuestionTypeMulti from './components/QuestionTypeMulti';
 import {questions} from './questions.json';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container, Col, Row, Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
+import 'animate.css/animate.css';  // you need to require the css somewhere
+import { Container, Col, Row, Modal, ModalHeader, ModalBody, ModalFooter, Button, Card, CardTitle, CardText } from 'reactstrap';
+
+
+const types = {
+    1:QuestionTypeOne,
+    2:QuestionTypeMulti,
+    3:QuestionTypeOne
+}
+
+const modalColors = {
+    0:"secondary",
+    1:"danger",
+    2:"warning",
+    3:"success"
+}
 
 class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            questions: questions,
             index: 0,
             modal: false,
-            modalText: ""
+            modalText: "",
+            modalType: 0
         };
+
+        this.questions = questions;
     }
 
-    acceptAnswer = (res) => {
-        this.toggleModal();
-        let newIndex = this.state.index === 2 ? 0 : this.state.index + 1;
+    acceptAnswer = (resultType, str) => {
+        let len = this.questions.length - 1;
+        let newIndex = this.state.index === len ? 0 : this.state.index + 1;
         this.setState({
-            modalText: res,
-            index: newIndex
+            modalText: str,
+            index: newIndex,
+            modal: true,
+            modalType: resultType
         });
+        console.log("new index", newIndex);
     }
 
     toggleModal = () => {
@@ -31,25 +52,44 @@ class App extends Component {
     }
 
     render(){
+
+        let questionObject = this.questions[this.state.index];
+        let ComponentName = types[questionObject.type];
+        let modalColor = modalColors[this.state.modalType];
+
+        let fadeProps = {
+            timeout: {
+                enter: 0,
+                exit: 150
+            }
+        }
+
         return (
             <Container>
+                <br/>
+                <br/>
                 <Row>
-                    <Col sm={"3"}></Col>
-                    <Col sm={"6"}>
-                        <Question
-                            q={this.state.questions[this.state.index]}
+                    <Col sm={"1"}></Col>
+                    <Col sm={"10"}>
+                        <ComponentName
+                            q={questionObject}
                             acceptAnswer={this.acceptAnswer}>
-                        </Question>
+                        </ComponentName>
                     </Col>
                 </Row>
-
-                <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
-                    <ModalHeader toggle={this.toggle}>Modal title</ModalHeader>
+                <Modal backdropTransition={fadeProps} size={"lg"} isOpen={this.state.modal} toggle={this.toggleModal}>
+                    <ModalHeader toggle={this.toggle}>Result</ModalHeader>
                     <ModalBody>
-                        {this.state.modalText}
+                        <Card body outline color={modalColor} className={"text-center"}>
+                            <br/>
+                            <br/>
+                            <CardTitle>{this.state.modalText}</CardTitle>
+                            <br/>
+                            <br/>
+                        </Card>
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="secondary" onClick={this.toggleModal}>Close</Button>
+                        <Button outline color="primary" onClick={this.toggleModal}>Next Question</Button>
                     </ModalFooter>
                 </Modal>
             </Container>
