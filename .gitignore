@@ -8,6 +8,7 @@ build
 build/
 package-lock.json
 .idea
+.DS_Store
 
 # Runtime data
 pids
