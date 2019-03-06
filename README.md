@@ -1,15 +1,27 @@
-###To host on gh-pages
+# Quiz App
+
+Quiz with questions and answers to choose from.
+- app reads json encoded question/answers objects
+- layout built using bootstrap 4 components
+- simple validation, when user is trying to submit with no answer or with too many selected
+- results modal, showing user results after completed test
+
+
+
+### To host on gh-pages
 delete ```gh-pages``` branch
 ```bash
 npm run-script build
-git subtree push --prefix build origin gh-pages
 ```
 change ```/static/``` to ```static/``` 
-in ```index.html``` in ```gh-pages``` branch.<br> 
-Its best to do it directly on github website
+in ```/build/index.html```
+```
+git subtree push --prefix build origin gh-pages
+```
 
-####Warning !!
-Do not checkout to gh-pages branch with your ide or else :P
+## Warning !!
+
+Do not checkout to gh-pages branch with your PHPStorm or else :P
 
 ---
 ***
