@@ -6,6 +6,18 @@ Quiz with questions and answers to choose from.
 - simple validation, when user is trying to submit with no answer or with too many selected
 - results modal, showing user results after completed test
 
+***
+
+Validation on one answer allowed type question:
+![alt text](https://raw.githubusercontent.com/romanzpolski/inter/master/images/Screenshot%202019-03-06%20at%2019.59.58.png
+ "Validation on one answer allowed type question")
+ 
+Results view:
+![alt text](https://raw.githubusercontent.com/romanzpolski/inter/master/images/Screenshot%202019-03-06%20at%2020.01.18.png
+ "Results view")
+
+***
+
 
 
 ### To host on gh-pages
