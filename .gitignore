@@ -6,8 +6,10 @@ yarn-debug.log*
 yarn-error.log*
 package-lock.json
 .idea/
-build
 build/
+images/
+
+
 
 # Runtime data
 pids
